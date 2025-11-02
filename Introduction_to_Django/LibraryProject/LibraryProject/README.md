@@ -34,4 +34,4 @@ Key files to note within the project structure:
 
   * **`manage.py`**: A command-line utility for interacting with the project (e.g., running the server, migrations).
   * **`settings.py`**: Contains the project's configuration (database, installed apps, middleware, etc.).
-  * **`urls.py`**: Defines the project's URL patterns (the "table of contents" for the site). 
+  * **`urls.py`**: Defines the project's URL patterns (the "table of contents" for the site).
