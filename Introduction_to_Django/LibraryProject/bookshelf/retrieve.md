@@ -10,7 +10,7 @@
 
 >>> # Assuming 'book1' still holds the book instance
 >>> print(f"Title: {book1.title}")
-Title: 1948
+Title: 1984
 >>> print(f"Author: {book.author1}")
 Author: George Orwell
 >>> print(f"Year: {book1.publication_year}")
