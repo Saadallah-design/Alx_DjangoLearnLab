@@ -2,4 +2,4 @@
 
 Use the following command
 >>> from bookshelf.models import Book
->>> book1.delete()
+>>> book.delete()
