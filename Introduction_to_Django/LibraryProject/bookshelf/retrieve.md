@@ -9,9 +9,9 @@
 ## We can also retrieve these instances using python format
 
 >>> # Assuming 'book1' still holds the book instance
->>> print(f"Title: {rbook1.title}")
-Title: Animal Farm
+>>> print(f"Title: {book1.title}")
+Title: 1948
 >>> print(f"Author: {book.author1}")
 Author: George Orwell
 >>> print(f"Year: {book1.publication_year}")
-Year: 1945
+Year: 1949
