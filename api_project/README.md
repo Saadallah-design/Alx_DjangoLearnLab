@@ -20,3 +20,7 @@ Implement Authentication and Permissions in Django REST Framework:
 
 * Secure API endpoints by implementing authentication schemes and permission settings.
 Ensure only authorized users can access and modify data through the API.
+
+### Step 1: Create a ViewSet
+ViewSets in DRF allow you to consolidate common logic for handling standard operations into a single class that handles all HTTP methods (GET, POST, PUT, DELETE).
+
