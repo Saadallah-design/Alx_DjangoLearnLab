@@ -2,6 +2,12 @@ from api.models import Book
 from .serializers import BookSerializer
 from rest_framework import generics 
 from rest_framework import viewsets
+from rest_framework.views import APIView
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.response import Response
+from rest_framework import permissions 
+from rest_framework import status
 
 # the following is a Generic Class-Based View
 # its logic implementation: Automatic. You only need to set attributes (queryset and serializer_class), 
@@ -23,3 +29,35 @@ class BookViewSet(viewsets.ModelViewSet):
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+
+    # Allows GET, HEAD, OPTIONS requests for unauthenticated users,
+    # but requires authentication for POST, PUT, PATCH, and DELETE.
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+
+# Setting token-based authentication in DRF
+
+class BookListView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # Only authenticated users can access this view
+        queryset = Book.objects.all()
+        BookSerializer = BookSerializer(queryset, many=True)
+        return Response(BookSerializer.data)
+        # return Response({'message': 'Hello, authenticated user!'})
+
+# class BookListCreateView(APIView):
+#     authentication_classes = [TokenAuthentication]
+#     permission_classes = [IsAdminUser]
+
+#     def post(self, request):
+#         # Only admin users can create new model instances
+#         serializer = BookSerializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
