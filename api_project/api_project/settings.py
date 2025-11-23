@@ -133,5 +133,12 @@ REST_FRAMEWORK = {
 
         # Allows authentication via Django sessions (useful for the Browsable API)
         'rest_framework.authentication.SessionAuthentication',
+    ],
+
+    # now, setting global default permission
+    # this establishes a global 'deny by default' policy for all DRF views.
+    # so any view I create will require a user to be logged in (authenticated)
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permission:IsAuthenticated',
     ]
 }
