@@ -139,6 +139,6 @@ REST_FRAMEWORK = {
     # this establishes a global 'deny by default' policy for all DRF views.
     # so any view I create will require a user to be logged in (authenticated)
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permission:IsAuthenticated',
+        'rest_framework.permissions:IsAuthenticated',
     ]
 }
