@@ -11,5 +11,5 @@ urlpatterns = [
 	path('books/class/', views.BookListView.as_view(), name='book_list_cbv'),
 
 	# Detail view for a library (expects library_id in URL)
-	path('library/<int:library_id>/', views.LibraryDetailView.as_view(), name='library_detail'),
+	path('library/<int:pk>/', views.LibraryDetailView.as_view(), name='library_detail'),
 ]
