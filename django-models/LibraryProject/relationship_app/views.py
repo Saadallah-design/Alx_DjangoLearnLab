@@ -55,4 +55,4 @@ def register_view(request):
             return redirect('relationship_app:login')
     else: 
         form = UserCreationForm()
-    return render(request, 'relationship_app/registration.html', {'form': form})
+    return render(request, 'relationship_app/register.html', {'form': form})
