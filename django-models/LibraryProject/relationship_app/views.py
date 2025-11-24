@@ -37,3 +37,38 @@ class BookListView(ListView):
     model = Book 
     template_name = 'relationship_app/list_books.html'
     context_object_name = 'all_books'
+
+# Task2. Django Forms and Templates
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login, logout
+from django.shortcuts import redirect, render
+from .forms import UserLoginForm
+
+def register_view(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('relationship_app:login')
+    else: 
+        form = UserCreationForm()
+    return render(request, 'relationship_app/registration.html', {'form': form})
+
+# user login view
+
+def user_login(request):
+    if request.method == 'POST':
+        form = UserLoginForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('relationship_app:list_books')
+    else:
+        form = UserLoginForm()
+    return render(request, 'relationship_app/login.html', {'form': form})
+
+# user logout view
+
+def user_logout(request):
+    logout(request)
+    return redirect('relationship_app:login')
