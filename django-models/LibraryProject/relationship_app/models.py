@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.views.generic import ListView
 # Create your models here.
 
 
@@ -28,3 +28,4 @@ class Librarian(models.Model):
 
     def __str__(self):
         return self.name
+    
