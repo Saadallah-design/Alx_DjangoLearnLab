@@ -1,5 +1,8 @@
 from django.urls import path
 from . import views
+from .views import LibraryDetailView
+from .views import BookListView
+from .views import book_list
 
 app_name = 'relationship_app'
 
