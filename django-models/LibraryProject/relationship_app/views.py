@@ -1,8 +1,8 @@
 from django.views import View
 from django.shortcuts import render, get_object_or_404
 from .models import Library, Librarian, Book 
-from django.views.generic import DetailView
-from django.views.generic import ListView
+from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
 
 # Create your views here.
 
