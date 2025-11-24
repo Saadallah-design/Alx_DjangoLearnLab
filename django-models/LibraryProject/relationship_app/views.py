@@ -9,7 +9,7 @@ from django.views.generic.list import ListView
 # Create a function-based view in relationship_app/views.py that lists all books stored in the database.
 # This view should render a simple text list of book titles and their authors.
 
-def book_list(request):
+def list_books(request):
     from .models import Book  # Importing here to avoid circular imports
     books = Book.objects.all()
     output = ', '.join([f"{book.title} by {book.author.name}" for book in books])
