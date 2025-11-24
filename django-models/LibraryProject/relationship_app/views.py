@@ -12,7 +12,7 @@ def book_list(request):
     from .models import Book  # Importing here to avoid circular imports
     books = Book.objects.all()
     output = ', '.join([f"{book.title} by {book.author.name}" for book in books])
-    return render(request, 'relationship_app/book_list.html', {'output': output})
+    return render(request, 'relationship_app/list_books.html', {'output': output})
 
 # create a class-based view in relationship_app/views.py that displays details of a specific library, listing all books available in that library along with the librarian's name.
 
@@ -55,5 +55,5 @@ class LibraryDetailView(View):
 
 class BookListView(ListView):
     model = Book 
-    template_name = 'relationship_app/book_list.html'
+    template_name = 'relationship_app/list_books.html'
     context_object_name = 'all_books'
