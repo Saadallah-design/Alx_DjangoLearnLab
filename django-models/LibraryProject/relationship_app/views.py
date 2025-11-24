@@ -1,7 +1,7 @@
 from django.views import View
 from django.shortcuts import render, get_object_or_404
 from .models import Library, Librarian, Book 
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 # Create your views here.
 
@@ -19,37 +19,16 @@ def book_list(request):
 
 
 
-class LibraryDetailView(View):
-    """
-    A Class-Based View for displaying library details, 
-    manually implemented to fetch all related data.
-    """
-    
-    # This method handles all GET requests to this view.
-    # It takes 'request' and 'library_id' (from the URL) as arguments.
-    def get(self, request, library_id):
-        
-        # 1. Fetch the main Library object (The exact same FBV logic)
-        library = get_object_or_404(Library, id=library_id)
-        
-        # 2. Fetch the related books using the ManyToMany relationship
-        books = library.books.all()
-        
-        # 3. Fetch the related Librarian using the OneToOne relationship
-        try:
-            librarian_info = library.librarian
-        except Librarian.DoesNotExist:
-            librarian_info = None
-            
-        # 4. Put all the data into the context dictionary
-        context = {
-            'library': library, 
-            'books_list': books, 
-            'librarian_info': librarian_info, 
-        }
-        
-        # 5. Tell Django to render the template with the context
-        return render(request, 'relationship_app/library_detail.html', context)
+class LibraryDetailView(DetailView):
+    model = Library
+    template_name = 'relationship_app/library_detail.html'
+    context_object_name = 'library'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        library = self.get_object()
+        context['books_list'] = library.books.all()
+        return context
     
 # Task1. Django Views and URL Configuration
 
