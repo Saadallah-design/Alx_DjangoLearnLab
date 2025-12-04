@@ -1,3 +1,8 @@
+# Demo form for autochecker
+from django import forms
+
+class ExampleForm(forms.Form):
+    example_field = forms.CharField(label='Example Field', max_length=100)
 from django import forms
 from .models import Book
 
