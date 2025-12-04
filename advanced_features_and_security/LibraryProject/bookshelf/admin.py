@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, Book
+from .models import CustomUser, Book
 # Register your models here.
 class BookAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'publication_year')
@@ -23,11 +23,11 @@ admin.site.index_title = "Welcome to the Library Project Admin Portal"
 # Custom UserAdmin to display custom fields
 class CustomUserAdmin(UserAdmin):
     """
-    Custom admin configuration for User model.
+    Custom admin configuration for CustomUser model.
     Extends Django's UserAdmin to include custom fields (date_of_birth, profile_photo).
     Provides comprehensive user management capabilities for administrators.
     """
-    model = User
+    model = CustomUser
     
     # Add custom fields to the user detail/edit page
     fieldsets = UserAdmin.fieldsets + (
@@ -86,5 +86,5 @@ class CustomUserAdmin(UserAdmin):
     show_full_result_count = True
 
 
-# Register User model with CustomUserAdmin
-admin.site.register(User, CustomUserAdmin)
+# Register CustomUser model with CustomUserAdmin
+admin.site.register(CustomUser, CustomUserAdmin)

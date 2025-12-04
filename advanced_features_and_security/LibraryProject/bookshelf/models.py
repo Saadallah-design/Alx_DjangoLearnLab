@@ -57,7 +57,7 @@ class CustomUserManager(BaseUserManager):
 
 
 # this is Model Layer for Custom User Model
-class User(AbstractUser):
+class CustomUser(AbstractUser):
     # here we have extended the default User model with custom fields
     date_of_birth = models.DateField(null=True, blank=True)
     profile_photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True)
