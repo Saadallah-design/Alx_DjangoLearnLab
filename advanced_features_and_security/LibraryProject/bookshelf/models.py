@@ -1,11 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.forms import ValidationError
 
 
 class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=100)
     publication_year = models.IntegerField()
+
+    def clean(self):
+        # Custom validation logic can be added here
+        if self.publication_year < 0 or self.publication_year > 2100:
+            raise ValidationError('Publication year must be between 0 and 2100.')
 
     class Meta:
         permissions = [

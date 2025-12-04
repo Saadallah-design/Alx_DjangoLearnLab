@@ -4,8 +4,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import Book
 from .forms import BookForm
+from ratelimit.decorators import ratelimit
 
 
+@ratelimit(key='ip', rate='5/m', block=True)
 def user_login(request):
     """Login view"""
     if request.method == 'POST':
@@ -19,8 +21,13 @@ def user_login(request):
             return redirect(next_url)
         else:
             messages.error(request, 'Invalid username or password.')
-    
-    return render(request, 'login.html')
+        response = render(request, 'login.html')
+        response["Content-Security-Policy"] = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self';"
+        return response
+    else:
+        response = render(request, 'login.html')
+        response["Content-Security-Policy"] = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self';"
+        return response
 
 
 def user_logout(request):

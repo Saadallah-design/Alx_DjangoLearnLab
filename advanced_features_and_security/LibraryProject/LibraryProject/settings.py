@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bookshelf',
     'relationship_app',
+    'csp',
+    'axes',
+
 ]
 
 MIDDLEWARE = [
@@ -54,7 +57,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',
+    'axes.middleware.AxesMiddleware',
 ]
+# Content Security Policy settings
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", 'cdn.jsdelivr.net')
+CSP_STYLE_SRC = ("'self'", 'fonts.googleapis.com')
+CSP_FONT_SRC = ("'self'", 'fonts.gstatic.com')
+
 
 ROOT_URLCONF = 'LibraryProject.urls'
 
@@ -135,3 +146,26 @@ AUTH_USER_MODEL = 'bookshelf.CustomUser'
 LOGIN_URL = 'login'  # Where to redirect when @login_required fails
 LOGIN_REDIRECT_URL = 'book_list'  # Where to go after successful login
 LOGOUT_REDIRECT_URL = 'login'  # Where to go after logout
+
+# Secure settings
+"""Enables the browser's built-in XSS (Cross-Site Scripting) filter. When set to True, it adds the
+X-XSS-Protection: 1; mode=block header to HTTP responses, which instructs compatible browsers to block the page if an XSS attack is detected."""
+SECURE_BROWSER_XSS_FILTER = True
+
+"""Prevents the site from being framed to protect against clickjacking attacks.
+When set to 'DENY', it adds the X-Frame-Options: DENY header to HTTP responses, which prevents any domain from framing the content."""
+X_FRAME_OPTIONS = 'DENY'
+
+"""Prevents the browser from MIME-sniffing a response away from the declared content-type.
+When set to True, it adds the X-Content-Type-Options: nosniff header to HTTP responses, which helps mitigate certain types of attacks based on MIME-type confusion."""
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', 'False') == 'True'
+
+"""SESSION_COOKIE_SECURE setting ensures that the session cookie is only sent over HTTPS connections.
+When set to True, it adds the 'Secure' flag to the session cookie, enhancing security by preventing its transmission over unencrypted HTTP connections."""
+SESSION_COOKIE_SECURE = os.getenv('SESSION_COOKIE_SECURE', 'False') == 'True'
+
+"""CSRF_COOKIE_SECURE setting ensures that the CSRF cookie is only sent over HTTPS connections.
+When set to True, it adds the 'Secure' flag to the CSRF cookie, enhancing security by preventing its transmission over unencrypted HTTP connections."""
+CSRF_COOKIE_SECURE = os.getenv('CSRF_COOKIE_SECURE', 'False') == 'True'
