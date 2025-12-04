@@ -1,6 +1,7 @@
 # Secure HTTPS Configuration: Summary of Changes
 
 This document summarizes the changes made to enforce HTTPS and strengthen security in your Django application.
+It is meant for learning purposes.
 
 ## 1. Enforce HTTPS
 - **SECURE_SSL_REDIRECT = True**
