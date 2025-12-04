@@ -1,0 +1,57 @@
+# Python
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+
+# Django
+*.log
+db.sqlite3
+db.sqlite3-journal
+/media
+/staticfiles
+*.pot
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Uploads
+profile_photos/
+
+# Ignore custom documentation
+README_standalone_scripts.md
+ENFORCING_PERMISSIONS_README.md
+
+
+# Ignore docs 
+REAME_st

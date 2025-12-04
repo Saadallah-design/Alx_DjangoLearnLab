@@ -1,0 +1,35 @@
+{% extends 'bookshelf/base.html' %}
+
+{% block title %}Delete Book - Library Management{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2 style="margin-bottom: 1.5rem; color: #dc3545;">🗑️ Delete Book</h2>
+    
+    <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 1rem; margin-bottom: 1.5rem; border-radius: 4px;">
+        <strong>⚠️ Warning:</strong> This action cannot be undone!
+    </div>
+    
+    <p style="font-size: 1.1rem; margin-bottom: 1rem;">
+        Are you sure you want to delete the following book?
+    </p>
+    
+    <div style="background-color: #f8f9fa; padding: 1.5rem; border-radius: 4px; margin-bottom: 1.5rem;">
+        <h3 style="margin-bottom: 0.5rem; color: #2c3e50;">{{ book.title }}</h3>
+        <p style="color: #666; margin-bottom: 0.25rem;">
+            <strong>Author:</strong> {{ book.author }}
+        </p>
+        <p style="color: #666;">
+            <strong>Publication Year:</strong> {{ book.publication_year }}
+        </p>
+    </div>
+    
+    <form method="post">
+        {% csrf_token %}
+        <div style="display: flex; gap: 1rem;">
+            <button type="submit" class="btn btn-danger">🗑️ Yes, Delete Book</button>
+            <a href="{% url 'book_list' %}" class="btn btn-secondary">❌ Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

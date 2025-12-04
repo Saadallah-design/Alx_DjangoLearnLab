@@ -1,0 +1,47 @@
+{% extends 'bookshelf/base.html' %}
+
+{% block title %}Book List - Library Management{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2 style="margin-bottom: 1.5rem; color: #2c3e50;">📖 Available Books</h2>
+    
+    {% if books %}
+        <div style="display: grid; gap: 1rem;">
+            {% for book in books %}
+                <div style="border: 1px solid #dee2e6; padding: 1rem; border-radius: 4px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h3 style="margin-bottom: 0.5rem; color: #007bff;">{{ book.title }}</h3>
+                        <p style="color: #666; margin-bottom: 0.25rem;">
+                            <strong>Author:</strong> {{ book.author }}
+                        </p>
+                        <p style="color: #666;">
+                            <strong>Year:</strong> {{ book.publication_year }}
+                        </p>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        {% if perms.bookshelf.can_edit %}
+                            <a href="{% url 'book_edit' book.id %}" class="btn btn-primary" style="padding: 0.5rem 1rem;">Edit</a>
+                        {% endif %}
+                        {% if perms.bookshelf.can_delete %}
+                            <a href="{% url 'book_delete' book.id %}" class="btn btn-danger" style="padding: 0.5rem 1rem;">Delete</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="text-align: center; color: #666; padding: 2rem;">No books available. 
+            {% if perms.bookshelf.can_create %}
+                <a href="{% url 'book_create' %}">Add the first book!</a>
+            {% endif %}
+        </p>
+    {% endif %}
+</div>
+
+{% if perms.bookshelf.can_create %}
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="{% url 'book_create' %}" class="btn btn-success">➕ Add New Book</a>
+    </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="bg-gray-800 text-white px-6 py-5 mb-6">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">📚 Library Management System</h1>
+            <div class="flex items-center gap-4">
+                <span class="text-sm">Welcome, {{ user.username }}</span>
+                <a href="{% url 'logout' %}" class="text-sm bg-red-600 hover:bg-red-700 px-4 py-2 rounded transition">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6">
+
+        {% if messages %}
+            <div class="mb-6">
+                {% for message in messages %}
+                    {% if message.tags == 'success' %}
+                        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded mb-3">{{ message }}</div>
+                    {% elif message.tags == 'error' %}
+                        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded mb-3">{{ message }}</div>
+                    {% else %}
+                        <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded mb-3">{{ message }}</div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">📖 Available Books</h2>
+            
+            {% if books %}
+                <div class="space-y-4">
+                    {% for book in books %}
+                        <div class="border border-gray-200 rounded-lg p-4 flex justify-between items-center hover:shadow-md transition-shadow">
+                            <div>
+                                <h3 class="text-lg font-semibold text-blue-600 mb-1">{{ book.title }}</h3>
+                                <p class="text-sm text-gray-600 mb-1"><strong>Author:</strong> {{ book.author }}</p>
+                                <p class="text-sm text-gray-600"><strong>Year:</strong> {{ book.publication_year }}</p>
+                            </div>
+                            <div class="flex gap-2">
+                                {% if perms.bookshelf.can_edit %}
+                                    <a href="{% url 'book_edit' book.id %}" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Edit</a>
+                                {% endif %}
+                                {% if perms.bookshelf.can_delete %}
+                                    <a href="{% url 'book_delete' book.id %}" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition">Delete</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-12 text-gray-500">
+                    <p class="mb-4">No books available yet.</p>
+                    {% if perms.bookshelf.can_create %}
+                        <a href="{% url 'book_create' %}" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition inline-block">Add First Book</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        {% if perms.bookshelf.can_create %}
+            <div class="text-center mt-6">
+                <a href="{% url 'book_create' %}" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition inline-block">➕ Add New Book</a>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,19 +1,19 @@
 from django.db import models
-
-# TASK
-# title: CharField with a maximum length of 200 characters.
-# author: CharField with a maximum length of 100 characters.
-# publication_year: IntegerField.
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from django.db import models 
 
 
-
-# Create your models here.
 class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=100)
     publication_year = models.IntegerField()
+
+    class Meta:
+        permissions = [
+            ("can_view", "Can view book"),
+            ("can_create", "Can create book"),
+            ("can_edit", "Can edit book"),
+            ("can_delete", "Can delete book"),
+        ]
 
     def __str__(self):
         return self.title
@@ -26,9 +26,11 @@ class CustomUserManager(BaseUserManager):
         if not username:
             raise ValueError('The Username must be set')
         
-        # Normalize email (lowercase the domain part)
+        # Normalize email (lowercase the domain part) or set to empty string if None
         if email:
             email = self.normalize_email(email)
+        else:
+            email = ''  # Set empty string instead of None to avoid NOT NULL constraint
         
         user = self.model(username=username, email=email, **extra_fields)
         user.set_password(password)
@@ -61,6 +63,9 @@ class CustomUser(AbstractUser):
     # here we have extended the default User model with custom fields
     date_of_birth = models.DateField(null=True, blank=True)
     profile_photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True)
+    
+    # Override email field to make it optional (blank=True allows empty string)
+    email = models.EmailField(blank=True, default='')
 
     # Attach the custom manager (CRITICAL!)
     objects = CustomUserManager()
@@ -90,8 +95,3 @@ class CustomUser(AbstractUser):
     # this is a string representation method
     def __str__(self):
         return self.username
-    
-
-
-
-    
