@@ -1,3 +1,6 @@
+# If using a proxy/load balancer that terminates SSL (e.g., Nginx, Heroku),
+# this tells Django to trust the X-Forwarded-Proto header for HTTPS detection.
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 """
 Django settings for LibraryProject project.
 
