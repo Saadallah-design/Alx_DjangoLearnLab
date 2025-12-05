@@ -1,0 +1,26 @@
+docs/
+__pycache__/
+*.pyc
+db.sqlite3
+/staticfiles/
+/media/
+.env
+.env.*
+docs/
+__pycache__/
+*.pyc
+db.sqlite3
+staticfiles/
+media/
+blogvenv/
+venv/
+.DS_Store
+*.sqlite3
+# VSCode and PyCharm
+.vscode/
+.idea/
+# Django migrations
+**/migrations/*.pyc
+**/migrations/__pycache__/
+# Node/npm
+node_modules/
