@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
-from blog.views import PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView
+from blog.views import PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, PostsByTagListView
 
 urlpatterns = [
     path('', views.PostListView.as_view(), name='home'),
@@ -22,4 +22,7 @@ urlpatterns = [
     path('comment/<int:pk>/delete/', views.CommentDeleteView.as_view(), name='comment_delete'),
     # Threaded reply (custom, not autochecker)
     path('comment/<int:pk>/reply/', views.ReplyCommentCreateView.as_view(), name='reply_comment'),
+    # Tag and search URLs
+    path('tags/<str:tag_name>/', views.PostsByTagListView.as_view(), name='posts_by_tag'),
+    path('search/', views.search_posts, name='search_posts'),
 ]

@@ -4,6 +4,12 @@
     <h1>{{ post.title }}</h1>
     <p>{{ post.content|linebreaks }}</p>
     <small>By {{ post.author }} on {{ post.published_date|date:'M d, Y' }}</small>
+        <div class="post-tags" style="margin:0.5em 0;">
+          <strong>Tags:</strong>
+          {% for tag in tags %}
+            <a href="{% url 'posts_by_tag' tag.name %}" style="background:#eee; color:#333; padding:0.2em 0.6em; border-radius:3px; margin-right:0.3em; text-decoration:none;">{{ tag.name }}</a>
+          {% empty %}No tags{% endfor %}
+        </div>
     <div class="post-actions">
       {% if user.is_authenticated and user == post.author %}
         <a class="btn" href="{% url 'post_update' post.pk %}">Edit</a>

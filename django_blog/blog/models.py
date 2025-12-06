@@ -1,20 +1,29 @@
+
+
 from django.db import models
 from django.contrib.auth.models import User
+from taggit.managers import TaggableManager
 
-# Create your models here.
+# Tag model for post tagging
+# class Tag(models.Model):
+#     name = models.CharField(max_length=30, unique=True)
 
+#     def __str__(self):
+#         return self.name
+
+# Post model with tags
 class Post(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
     published_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     updated_at = models.DateTimeField(auto_now=True)
+    tags = TaggableManager()
+
 
     def __str__(self):
         return self.title
-    
-    # Get the URL to view a specific post
-    # it means that after creating or updating a post, we can redirect to its detail view
+
     def get_absolute_url(self):
         from django.urls import reverse
         return reverse('post_detail', kwargs={'pk': self.pk})

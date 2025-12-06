@@ -18,6 +18,7 @@ Permissions & Data Handling:
 
 See README.md for more details.
 """
+from asyncio.log import logger
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CustomUserCreationForm, PostForm, CommentForm, ReplyCommentForm
 from django.contrib.auth.decorators import login_required
@@ -28,6 +29,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.db.models import Q
 
 def register(request):
     # URL: /register/
@@ -141,6 +143,7 @@ class PostDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['comments'] = self.object.comments.all()
         context['comment_form'] = CommentForm()
+        context['tags'] = self.object.tags.all()
         return context
 
 class CommentCreateView(LoginRequiredMixin, CreateView):
@@ -198,4 +201,26 @@ class ReplyCommentCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return self.object.post.get_absolute_url()
+    
 
+# filter posts by tag
+class PostsByTagListView(ListView):
+    model = Post
+    template_name = 'blog/posts_by_tag.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        tag_name = self.kwargs.get('tag_name')
+        return Post.objects.filter(tags__name=tag_name)
+
+# Search view for posts by title, content, or tags
+def search_posts(request):
+    query = request.GET.get('q', '').strip().lower()
+    results = []
+    if query:
+        results = Post.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+    return render(request, 'blog/search_results.html', {'query': query, 'results': results})

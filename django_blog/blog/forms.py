@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Profile, Post, Comment
+from taggit.forms import TagWidget
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -43,9 +44,24 @@ class ProfileForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        # only allow title and content to be edited via the form
-        # author and published_date are set automatically
-        fields = ['title', 'content']
+        fields = ['title', 'content', 'tags']
+        widgets = {
+            'tags': TagWidget(),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Always set initial tags as comma-separated string for both create and update
+        tags_qs = self.instance.tags.all() if self.instance.pk else []
+        self.fields['tags'].initial = ', '.join(tag.name for tag in tags_qs)
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        tags = self.cleaned_data.get('tags')
+        if commit:
+            instance.save()
+            instance.tags.set(tags)
+        return instance
 
 # Comment form
 class CommentForm(forms.ModelForm):
