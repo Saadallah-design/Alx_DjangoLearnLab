@@ -150,7 +150,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         post_pk = self.kwargs.get('pk')
-        post = get_object_or_404(Post, pk=self.kwargs.get('post_id'))
+        post = get_object_or_404(Post, pk=post_pk)
         form.instance.post = post
         form.instance.author = self.request.user
         messages.success(self.request, 'Your comment has been added.')
@@ -188,10 +188,8 @@ class ReplyCommentCreateView(LoginRequiredMixin, CreateView):
     template_name = 'blog/reply_comment_form.html'
 
     def form_valid(self, form):
-        post_pk = self.kwargs.get('post_id')
-        parent_id = self.kwargs.get('comment_id')
-        post = get_object_or_404(Post, pk=post_pk)
-        parent_comment = get_object_or_404(Comment, pk=parent_id)
+        parent_comment = get_object_or_404(Comment, pk=self.kwargs.get('pk'))
+        post = parent_comment.post
         form.instance.post = post
         form.instance.author = self.request.user
         form.instance.parent = parent_comment
