@@ -1,0 +1,28 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+  <h1 class="blog-title">Welcome to the Blog</h1>
+  <h2>Latest Posts</h2>
+  <ul class="post-list">
+    {% for post in posts %}
+      <li>
+        <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h2>
+        <p>{{ post.content|truncatewords:30 }}</p>
+        <small>By {{ post.author }} on {{ post.published_date|date:'M d, Y' }}</small>
+      </li>
+    {% empty %}
+      <li>No posts available.</li>
+    {% endfor %}
+  </ul>
+  {% if is_paginated %}
+    <div class="pagination">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+      <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+      {% endif %}
+    </div>
+  {% endif %}
+  <a class="btn" href="{% url 'post_create' %}">Create New Post</a>
+{% endblock %}

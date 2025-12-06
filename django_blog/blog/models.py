@@ -35,4 +35,7 @@ from django.dispatch import receiver
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
-    instance.profile.save()
+    else:
+        # Only save if profile exists
+        if hasattr(instance, 'profile'):    
+            instance.profile.save()

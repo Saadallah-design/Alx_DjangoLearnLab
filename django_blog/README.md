@@ -1,10 +1,6 @@
-Here is a concise project overview, ready to be added to your `README.md`:
-
 # 🚀 Project Overview: LibraryProject
 
 This project is a foundational **Django application** named `LibraryProject`, designed to demonstrate a basic Django development environment setup.
-
------
 
 ## 🛠️ Setup and Environment
 
