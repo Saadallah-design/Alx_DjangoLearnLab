@@ -12,4 +12,48 @@
       <a class="btn" href="{% url 'home' %}">Back to List</a>
     </div>
   </article>
+
+  <section class="comments" style="margin-top:2em;">
+    <h2 style="border-bottom:1px solid #eee; padding-bottom:0.5em;">Comments</h2>
+    {% for comment in comments %}
+      <div class="comment" style="background:#f9f9f9; border-radius:6px; margin-bottom:1em; padding:1em; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <strong style="color:#2c3e50;">{{ comment.author.username }}</strong>
+            <span style="margin-left:0.5em; color:#555;">{{ comment.content }}</span>
+          </div>
+          <small style="color:#888; font-size:0.9em;">{{ comment.created_at|date:'M d, Y H:i' }}</small>
+        </div>
+        {% if user.is_authenticated %}
+          <div style="margin-top:0.5em;">
+            <a href="{% url 'reply_comment' post.pk comment.pk %}" class="btn" style="background:#f1c40f; color:#fff; padding:0.3em 0.8em; border-radius:4px; text-decoration:none; margin-right:0.5em;">Reply</a>
+          </div>
+        {% endif %}
+        {% if user.is_authenticated and user == comment.author %}
+          <div style="margin-top:0.5em;">
+            <a href="{% url 'comment_edit' post.pk comment.pk %}" class="btn" style="background:#3498db; color:#fff; padding:0.3em 0.8em; border-radius:4px; text-decoration:none; margin-right:0.5em;">Edit</a>
+            <a href="{% url 'comment_delete' post.pk comment.pk %}" class="btn btn-danger" style="background:#e74c3c; color:#fff; padding:0.3em 0.8em; border-radius:4px; text-decoration:none;">Delete</a>
+          </div>
+        {% endif %}
+        {% for reply in comment.replies.all %}
+          <div class="comment reply" style="margin-left:2em; background:#f6f6f6; border-radius:4px; padding:0.5em; margin-top:0.5em;">
+            <strong style="color:#2980b9;">{{ reply.author.username }}</strong>:
+            <span style="color:#555;">{{ reply.content }}</span>
+            <small style="color:#888; font-size:0.8em;">{{ reply.created_at|date:'M d, Y H:i' }}</small>
+          </div>
+        {% endfor %}
+      </div>
+    {% empty %}
+      <p style="color:#888;">No comments yet.</p>
+    {% endfor %}
+    {% if user.is_authenticated %}
+      <form method="post" action="{% url 'add_comment' post.pk %}" style="margin-top:2em; background:#f4f8fb; padding:1em; border-radius:6px; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button type="submit" class="btn" style="background:#27ae60; color:#fff; padding:0.5em 1.2em; border-radius:4px; font-weight:bold;">Add Comment</button>
+      </form>
+    {% else %}
+      <p><a href="{% url 'login' %}" style="color:#2980b9; text-decoration:underline;">Log in</a> to add a comment.</p>
+    {% endif %}
+  </section>
 {% endblock %}

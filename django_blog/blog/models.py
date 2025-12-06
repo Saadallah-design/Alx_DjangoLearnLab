@@ -2,10 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
-from django.db import models
-from django.contrib.auth.models import User
-
-# Create your models here.
 
 class Post(models.Model):
     title = models.CharField(max_length=200)
@@ -16,6 +12,12 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+    
+    # Get the URL to view a specific post
+    # it means that after creating or updating a post, we can redirect to its detail view
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('post_detail', kwargs={'pk': self.pk})
     
 # Profile model to extend User model with additional info
 class Profile(models.Model):
@@ -39,3 +41,18 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
         # Only save if profile exists
         if hasattr(instance, 'profile'):    
             instance.profile.save()
+
+# Comment model for blog posts
+class Comment(models.Model):
+    post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    parent = models.ForeignKey('self', null=True, blank=True, related_name='replies', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f"Comment by {self.author.username} on {self.post.title}"

@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Profile, Post
+from .models import Profile, Post, Comment
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -46,3 +46,14 @@ class PostForm(forms.ModelForm):
         # only allow title and content to be edited via the form
         # author and published_date are set automatically
         fields = ['title', 'content']
+
+# Comment form
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+
+class ReplyCommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']

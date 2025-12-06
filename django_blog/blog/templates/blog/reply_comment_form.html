@@ -1,0 +1,10 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+  <h2>Reply to Comment</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn">Reply</button>
+    <a class="btn" href="{{ object.post.get_absolute_url }}">Cancel</a>
+  </form>
+{% endblock %}

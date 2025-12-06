@@ -5,9 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Django Blog{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'blog/style.css' %}"></link>
+    <link rel="stylesheet" href="{% static 'blog/style.css' %}">
+    <script src="{% static 'blog/messages.js' %}"></script>
 </head>
 <body>
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li class="message {{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
     <header>
         <nav>
             <ul>

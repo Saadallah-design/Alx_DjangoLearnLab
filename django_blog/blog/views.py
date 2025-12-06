@@ -18,18 +18,16 @@ Permissions & Data Handling:
 
 See README.md for more details.
 """
-from django.shortcuts import render, redirect
-from .forms import CustomUserCreationForm, PostForm
+from django.shortcuts import render, redirect, get_object_or_404
+from .forms import CustomUserCreationForm, PostForm, CommentForm, ReplyCommentForm
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, DetailView
-from .models import Post, Profile
+from django.views.generic import ListView, DetailView, CreateView
+from .models import Post, Profile, Comment
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import CreateView, UpdateView, DeleteView
+from django.views.generic import UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib import messages
-
-
 
 def register(request):
     # URL: /register/
@@ -138,4 +136,68 @@ class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/post_detail.html'
     context_object_name = 'post'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comments'] = self.object.comments.all()
+        context['comment_form'] = CommentForm()
+        return context
+
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/add_comment.html'
+
+    def form_valid(self, form):
+        post_pk = self.kwargs.get('pk')
+        post = get_object_or_404(Post, pk=self.kwargs.get('post_id'))
+        form.instance.post = post
+        form.instance.author = self.request.user
+        messages.success(self.request, 'Your comment has been added.')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
+
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Comment
+    fields = ['content']
+    template_name = 'blog/comment_form.html'
+
+    def test_func(self):
+        comment = self.get_object()
+        return self.request.user == comment.author
+
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
+
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    template_name = 'blog/comment_confirm_delete.html'
+
+    def test_func(self):
+        comment = self.get_object()
+        return self.request.user == comment.author
+
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
+
+class ReplyCommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    form_class = ReplyCommentForm
+    template_name = 'blog/reply_comment_form.html'
+
+    def form_valid(self, form):
+        post_pk = self.kwargs.get('post_id')
+        parent_id = self.kwargs.get('comment_id')
+        post = get_object_or_404(Post, pk=post_pk)
+        parent_comment = get_object_or_404(Comment, pk=parent_id)
+        form.instance.post = post
+        form.instance.author = self.request.user
+        form.instance.parent = parent_comment
+        messages.success(self.request, 'Your reply has been added.')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
 
